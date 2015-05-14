@@ -1417,3 +1417,32 @@ class CourseDescriptor(CourseFields, SequenceDescriptor):
         return "course_{}".format(
             b32encode(unicode(self.location.course_key)).replace('=', padding_char)
         )
+
+    @property
+    def teams_enabled(self):
+        """
+        Returns whether or not teams has been enabled for this course.
+        """
+        if self.teams_configuration:
+            return 'topics' in self.teams_configuration and len(self.teams_configuration['topics']) > 0
+        return False
+
+    @property
+    def teams_max_size(self):
+        """
+        Returns the max size for teams if teams has been configured. Otherwise, returns None.
+        """
+        if self.teams_enabled:
+            try:
+                return self.teams_configuration['max_team_size']
+            except KeyError:
+                return None
+
+    @property
+    def teams_topics(self):
+        """
+        Returns the topics that have been configured for teams for this course.
+        """
+        if self.teams_enabled:
+            return self.teams_configuration['topics']
+        return None

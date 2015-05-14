@@ -277,3 +277,49 @@ class DiscussionTopicsTestCase(unittest.TestCase):
     def test_default_discussion_topics(self):
         d = get_dummy_course('2012-12-02T12:00')
         self.assertEqual({'General': {'id': 'i4x-test_org-test_course-course-test'}}, d.discussion_topics)
+
+
+class TeamsConfigurationTestCase(unittest.TestCase):
+    """
+    Tests for the configuration of teams and the helper methods for accessing them.
+    """
+    def setUp(self):
+        super(TeamsConfigurationTestCase, self).setUp()
+        self.course = get_dummy_course('2012-12-02T12:00')
+
+    def add_team_configuration(self, max_team_size=3, topics=list()):
+        """ Add a team configuration to the course. """
+        self.course.teams_configuration = {"max_team_size": max_team_size, "topics": topics}
+
+    def make_topic(self):
+        return {"display_name": "Display Name", "description": "Description", "id": "topic_id"}
+
+    def test_teams_enabled_no_teams(self):
+        # Make sure we can detect when no teams exist.
+        self.assertFalse(self.course.teams_enabled)
+
+    def test_teams_enabled_no_topics(self):
+        self.add_team_configuration(4)
+        self.assertFalse(self.course.teams_enabled)
+
+    def test_teams_enabled_with_teams(self):
+        self.add_team_configuration(4, topics=[self.make_topic(), self.make_topic()])
+        self.assertTrue(self.course.teams_enabled)
+
+    def test_teams_max_size_no_teams(self):
+        self.assertIsNone(self.course.teams_max_size)
+
+    def test_teams_max_size_with_teams(self):
+        size = 4
+        self.add_team_configuration(size, topics=[self.make_topic(), self.make_topic()])
+        self.assertTrue(self.course.teams_enabled)
+        self.assertEqual(size, self.course.teams_max_size)
+
+    def test_teams_topics_no_teams(self):
+        self.assertIsNone(self.course.teams_topics)
+
+    def test_teams_topics_with_teams(self):
+        topics = [self.make_topic(), self.make_topic()]
+        self.add_team_configuration(4, topics=topics)
+        self.assertTrue(self.course.teams_enabled)
+        self.assertEqual(self.course.teams_topics, topics)
