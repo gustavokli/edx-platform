@@ -112,7 +112,7 @@
 
     .tip-inline {
       display: inline;
-      margin-left: 5px;
+      @include margin-left($baseline/4);
     }
 
     .message-error {
