@@ -1,7 +1,7 @@
 define(["backbone", "underscore"], function(Backbone, _) {
     var LicenseModel = Backbone.Model.extend({
         defaults: {
-            "type": null,
+            "type": "all-rights-reserved",
             "options": {},
             "custom": false // either `false`, or a string
         },
