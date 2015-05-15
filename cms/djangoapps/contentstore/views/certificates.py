@@ -206,7 +206,7 @@ class Certificate(object):
         Instantiate a Certificate object instance using the provided information.
         """
         self.course = course
-        self.certificate_data = certificate_data
+        self._certificate_data = certificate_data
         self.id = certificate_data['id']  # pylint: disable=invalid-name
 
     @property
@@ -214,7 +214,7 @@ class Certificate(object):
         """
         Retrieve the locally-stored certificate data from the Certificate object via a helper method
         """
-        return self.certificate_data
+        return self._certificate_data
 
 
 @login_required
